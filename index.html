@@ -1,22 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Task Manager</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Task Manager</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1>Student Task Manager</h1>
+            <p>Organize your assignments and deadlines</p>
+        </header>
 
-  <h1>Student Task Manager</h1>
+        <main>
+            <section class="task-input-section">
+                <form id="task-form">
+                    <div class="input-group">
+                        <input type="text" id="task-input" placeholder="What needs to be done?" required autocomplete="off">
+                        <select id="priority-input">
+                            <option value="low">Low Priority</option>
+                            <option value="medium" selected>Medium Priority</option>
+                            <option value="high">High Priority</option>
+                        </select>
+                        <button type="submit" id="add-btn" class="btn primary-btn">
+                            <i class="fas fa-plus"></i> Add
+                        </button>
+                    </div>
+                </form>
+            </section>
 
-  <div class="container">
-    <input type="text" id="taskInput" placeholder="Enter a task">
-    <button>Add Task</button>
-  </div>
+            <section class="task-list-section">
+                <div class="list-header">
+                    <h2>Your Tasks</h2>
+                    <div class="filters">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="active">Active</button>
+                        <button class="filter-btn" data-filter="completed">Completed</button>
+                    </div>
+                </div>
+                
+                <ul id="task-list" class="task-list">
+                    <!-- Tasks will be inserted here dynamically -->
+                </ul>
+                
+                <div id="empty-state" class="empty-state hidden">
+                    <img src="https://illustrations.popsy.co/amber/freelancer.svg" alt="No tasks" class="empty-img">
+                    <p>You're all caught up! Enjoy your free time.</p>
+                </div>
+                
+                <div class="list-footer">
+                    <span id="task-count">0 tasks left</span>
+                    <button id="clear-completed" class="btn secondary-btn">Clear completed</button>
+                </div>
+            </section>
+        </main>
+    </div>
 
-  <ul id="taskList"></ul>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
