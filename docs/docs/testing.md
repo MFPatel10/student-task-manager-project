@@ -24,3 +24,13 @@ Actual Result: Passed
 Feature: Task Deadline  
 Expected Result: Deadline is saved and displayed with the task  
 Actual Result: Passed
+
+## Test Case 6
+Feature: Task Priority  
+Expected Result: Priority is saved and displayed with the task  
+Actual Result: Passed
+
+## Test Case 7
+Feature: Edit Task  
+Expected Result: Task details can be updated and saved  
+Actual Result: Passed
