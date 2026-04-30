@@ -19,3 +19,8 @@ Actual Result: Passed
 Feature: Save After Refresh  
 Expected Result: Tasks remain after refresh  
 Actual Result: Passed
+
+## Test Case 5
+Feature: Task Deadline  
+Expected Result: Deadline is saved and displayed with the task  
+Actual Result: Passed
