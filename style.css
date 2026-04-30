@@ -80,26 +80,43 @@ header p {
     margin-bottom: 2rem;
 }
 
-.input-group {
+.form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.controls-row {
     display: flex;
     gap: 1rem;
     align-items: center;
+    flex-wrap: wrap;
+}
+
+.button-group {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: auto;
 }
 
 @media (max-width: 600px) {
-    .input-group {
+    .controls-row {
         flex-direction: column;
+        align-items: stretch;
     }
 
-    .input-group input,
-    .input-group select,
-    .input-group button {
+    .button-group {
+        flex-direction: column;
+        margin-left: 0;
+    }
+
+    .button-group button {
         width: 100%;
     }
 }
 
 input[type="text"] {
-    flex: 1;
+    width: 100%;
     padding: 0.875rem 1rem;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
@@ -178,14 +195,15 @@ select:focus {
 }
 
 .secondary-btn {
-    background-color: transparent;
+    background-color: white;
     color: var(--text-muted);
-    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
 }
 
 .secondary-btn:hover {
     color: var(--danger-color);
     background-color: #fef2f2;
+    border-color: #fca5a5;
 }
 
 .task-list-section {
@@ -242,13 +260,18 @@ select:focus {
 
 .task-item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     padding: 1.25rem 1.5rem;
     border-bottom: 1px solid var(--border-color);
     transition: all 0.3s ease;
     background-color: white;
     gap: 1rem;
     animation: slideIn 0.3s ease forwards;
+}
+
+.task-item.completed {
+    opacity: 0.65;
+    background-color: #f1f5f9;
 }
 
 @keyframes slideIn {
@@ -281,6 +304,7 @@ select:focus {
     position: relative;
     transition: all 0.2s ease;
     flex-shrink: 0;
+    margin-top: 0.15rem;
 }
 
 .task-checkbox:checked {
@@ -320,15 +344,11 @@ select:focus {
 }
 
 .task-description {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     color: var(--text-muted);
-    margin-top: 0.25rem;
+    margin-top: 0.35rem;
     word-break: break-word;
-}
-
-.task-item.completed .task-description {
-    color: #cbd5e1;
-    /* Lighter text for completed description */
+    line-height: 1.4;
 }
 
 .task-meta {
@@ -336,7 +356,7 @@ select:focus {
     gap: 0.75rem;
     align-items: center;
     flex-wrap: wrap;
-    margin-top: 0.25rem;
+    margin-top: 0.6rem;
 }
 
 .deadline-badge {
