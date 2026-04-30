@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // DOM Elements
     const taskForm = document.getElementById('task-form');
     const taskInput = document.getElementById('task-input');
+    const descriptionInput = document.getElementById('description-input'); // Description input
     const deadlineInput = document.getElementById('deadline-input'); // New deadline input element
     const priorityInput = document.getElementById('priority-input');
     const taskList = document.getElementById('task-list');
@@ -39,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         const text = taskInput.value.trim();
+        const description = descriptionInput.value.trim(); // Get description value
         const deadline = deadlineInput.value; // Get deadline value
         const priority = priorityInput.value;
 
@@ -46,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const newTask = {
                 id: Date.now().toString(),
                 text,
+                description, // Save description with task
                 deadline, // Save deadline with task
                 priority,
                 completed: false,
@@ -58,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Reset form
             taskInput.value = '';
+            descriptionInput.value = ''; // Reset description field
             deadlineInput.value = ''; // Reset deadline field
             taskInput.focus();
         }
@@ -156,6 +160,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} aria-label="Mark task as completed">
                     <div class="task-content">
                         <span class="task-text">${escapeHTML(task.text)}</span>
+                        <!-- Show description if it exists -->
+                        ${task.description ? `<p class="task-description">${escapeHTML(task.description)}</p>` : ''}
                         <div class="task-meta">
                             <span class="priority-badge priority-${task.priority}">${task.priority} Priority</span>
                             <!-- Show deadline if it exists -->
