@@ -6,18 +6,18 @@
     --text-main: #0f172a;
     --text-muted: #64748b;
     --border-color: #e2e8f0;
-    
+
     --success-color: #10b981;
     --danger-color: #ef4444;
-    
+
     --priority-high: #fef2f2;
     --priority-high-text: #ef4444;
     --priority-high-border: #fca5a5;
-    
+
     --priority-medium: #fffbeb;
     --priority-medium-text: #f59e0b;
     --priority-medium-border: #fcd34d;
-    
+
     --priority-low: #f0fdf4;
     --priority-low-text: #10b981;
     --priority-low-border: #86efac;
@@ -25,7 +25,7 @@
     --radius-sm: 6px;
     --radius-md: 12px;
     --radius-lg: 24px;
-    
+
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
@@ -90,9 +90,9 @@ header p {
     .input-group {
         flex-direction: column;
     }
-    
-    .input-group input, 
-    .input-group select, 
+
+    .input-group input,
+    .input-group select,
     .input-group button {
         width: 100%;
     }
@@ -110,6 +110,24 @@ input[type="text"] {
 }
 
 input[type="text"]:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+/* Date input styling */
+input[type="date"] {
+    padding: 0.875rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    font-family: inherit;
+    background-color: white;
+    outline: none;
+    transition: all 0.2s ease;
+    color: var(--text-main);
+}
+
+input[type="date"]:focus {
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }
@@ -238,6 +256,7 @@ select:focus {
         opacity: 0;
         transform: translateY(10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -298,6 +317,22 @@ select:focus {
 .task-item.completed .task-text {
     color: var(--text-muted);
     text-decoration: line-through;
+}
+
+.task-meta {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 0.25rem;
+}
+
+.deadline-badge {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
 }
 
 .priority-badge {
