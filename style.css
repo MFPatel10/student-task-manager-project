@@ -1,387 +1,478 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // DOM Elements
-    const authSection = document.getElementById('auth-section');
-    const appSection = document.getElementById('app-section');
-    const emailInput = document.getElementById('email-input');
-    const passwordInput = document.getElementById('password-input');
-    const loginBtn = document.getElementById('login-btn');
-    const registerBtn = document.getElementById('register-btn');
-    const logoutBtn = document.getElementById('logout-btn');
-    const userEmailDisplay = document.getElementById('user-email');
-    const authError = document.getElementById('auth-error');
+:root {
+    --primary-color: #6366f1;
+    --primary-hover: #4f46e5;
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
 
-    const taskForm = document.getElementById('task-form');
-    const taskInput = document.getElementById('task-input');
-    const addBtn = document.getElementById('add-btn'); // Add button
-    const cancelEditBtn = document.getElementById('cancel-edit-btn'); // Cancel edit button
-    const descriptionInput = document.getElementById('description-input'); // Description input
-    const deadlineInput = document.getElementById('deadline-input'); // New deadline input element
-    const priorityInput = document.getElementById('priority-input');
-    const taskList = document.getElementById('task-list');
-    const taskCount = document.getElementById('task-count');
-    const clearCompletedBtn = document.getElementById('clear-completed');
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const emptyState = document.getElementById('empty-state');
+    --success-color: #10b981;
+    --danger-color: #ef4444;
 
-    // State
-    let tasks = []; // Tasks will be loaded from Firestore
-    let currentFilter = 'all';
-    let editingTaskId = null; // Track which task is being edited
-    let currentUser = null; // Track the logged-in user
+    --priority-high: #fef2f2;
+    --priority-high-text: #ef4444;
+    --priority-high-border: #fca5a5;
 
-    // Initialize UI
-    renderTasks();
+    --priority-medium: #fffbeb;
+    --priority-medium-text: #f59e0b;
+    --priority-medium-border: #fcd34d;
 
-    // Firebase Auth State Listener
-    auth.onAuthStateChanged(user => {
-        if (user) {
-            // User is logged in
-            authSection.classList.add('hidden');
-            appSection.classList.remove('hidden');
-            userEmailDisplay.textContent = user.email;
-            currentUser = user;
-            loadTasks(); // Load tasks from Firestore
-        } else {
-            // User is logged out
-            authSection.classList.remove('hidden');
-            appSection.classList.add('hidden');
-            userEmailDisplay.textContent = '';
-            currentUser = null;
-            tasks = [];
-            renderTasks();
-        }
-    });
+    --priority-low: #f0fdf4;
+    --priority-low-text: #10b981;
+    --priority-low-border: #86efac;
 
-    // Load user tasks from Firestore
-    function loadTasks() {
-        if (!currentUser) return;
-        
-        db.collection('tasks')
-            .where('userId', '==', currentUser.uid)
-            .onSnapshot(snapshot => {
-                tasks = snapshot.docs.map(doc => {
-                    return { id: doc.id, ...doc.data() };
-                });
-                
-                // Sort locally by createdAt (newest first) to avoid needing a Firestore composite index
-                tasks.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                
-                renderTasks(); // Re-render the UI when data changes
-            }, error => {
-                console.error("Error loading tasks:", error);
-            });
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 24px;
+
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.auth-form-card {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.025em;
+}
+
+header p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+.task-input-section {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    margin-bottom: 2rem;
+}
+
+.form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.controls-row {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.button-group {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: auto;
+}
+
+@media (max-width: 600px) {
+    .controls-row {
+        flex-direction: column;
+        align-items: stretch;
     }
 
-    // Auth Event Listeners
-    loginBtn.addEventListener('click', () => {
-        const email = emailInput.value.trim();
-        const password = passwordInput.value;
-        if (!email || !password) {
-            showAuthError('Please enter email and password');
-            return;
-        }
-        
-        auth.signInWithEmailAndPassword(email, password)
-            .then(() => {
-                emailInput.value = '';
-                passwordInput.value = '';
-                authError.classList.add('hidden');
-                alert('Login successful!');
-            })
-            .catch(error => {
-                showAuthError(error.message);
-                alert('Login failed: ' + error.message);
-            });
-    });
-
-    registerBtn.addEventListener('click', () => {
-        const email = emailInput.value.trim();
-        const password = passwordInput.value;
-        if (!email || !password) {
-            showAuthError('Please enter email and password');
-            return;
-        }
-
-        auth.createUserWithEmailAndPassword(email, password)
-            .then(() => {
-                emailInput.value = '';
-                passwordInput.value = '';
-                authError.classList.add('hidden');
-                alert('Registration successful!');
-            })
-            .catch(error => {
-                showAuthError(error.message);
-                alert('Registration failed: ' + error.message);
-            });
-    });
-
-    logoutBtn.addEventListener('click', () => {
-        auth.signOut()
-            .then(() => alert('Logout successful!'))
-            .catch(error => {
-                console.error('Logout error:', error);
-                alert('Logout failed: ' + error.message);
-            });
-    });
-
-    function showAuthError(message) {
-        authError.textContent = message;
-        authError.classList.remove('hidden');
+    .button-group {
+        flex-direction: column;
+        margin-left: 0;
     }
 
-    // Task Event Listeners
-    taskForm.addEventListener('submit', addTask);
-    taskList.addEventListener('click', handleTaskAction);
-    clearCompletedBtn.addEventListener('click', clearCompleted);
-    if (cancelEditBtn) cancelEditBtn.addEventListener('click', cancelEdit); // Cancel edit listener
+    .button-group button {
+        width: 100%;
+    }
+}
 
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            // Update active class
-            filterBtns.forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    outline: none;
+}
 
-            // Update filter and render
-            currentFilter = e.target.dataset.filter;
-            renderTasks();
-        });
-    });
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
 
-    // Functions
-    function addTask(e) {
-        e.preventDefault();
+/* Date input styling */
+input[type="date"] {
+    padding: 0.875rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    font-family: inherit;
+    background-color: white;
+    outline: none;
+    transition: all 0.2s ease;
+    color: var(--text-main);
+}
 
-        const text = taskInput.value.trim();
-        const description = descriptionInput.value.trim(); // Get description value
-        const deadline = deadlineInput.value; // Get deadline value
-        const priority = priorityInput.value;
+input[type="date"]:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
 
-        if (text !== '' && currentUser) {
-            if (editingTaskId) {
-                // Update existing task in Firestore
-                db.collection('tasks').doc(editingTaskId).update({
-                    text,
-                    description,
-                    deadline,
-                    priority
-                }).then(() => {
-                    editingTaskId = null;
-                    addBtn.innerHTML = '<i class="fas fa-plus"></i> Add';
-                    cancelEditBtn.classList.add('hidden');
-                }).catch(error => console.error("Error updating task:", error));
-            } else {
-                // Add new task to Firestore
-                const newTask = {
-                    userId: currentUser.uid,
-                    text,
-                    description,
-                    deadline,
-                    priority,
-                    completed: false,
-                    createdAt: new Date().toISOString()
-                };
-                
-                db.collection('tasks').add(newTask)
-                    .catch(error => console.error("Error adding task:", error));
-            }
+select {
+    padding: 0.875rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    font-family: inherit;
+    background-color: white;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
+}
 
-            // Notice we do NOT need to manually modify the tasks array or call renderTasks() here,
-            // because our onSnapshot listener will automatically detect the change and update the UI!
+select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
 
-            // Reset form
-            taskInput.value = '';
-            descriptionInput.value = ''; // Reset description field
-            deadlineInput.value = ''; // Reset deadline field
-            priorityInput.value = 'medium'; // Reset priority
-            taskInput.focus();
-        }
+.btn {
+    padding: 0.875rem 1.5rem;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.primary-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.primary-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+.primary-btn:active {
+    transform: translateY(0);
+}
+
+.secondary-btn {
+    background-color: white;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+}
+
+.secondary-btn:hover {
+    color: var(--danger-color);
+    background-color: #fef2f2;
+    border-color: #fca5a5;
+}
+
+.task-list-section {
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+}
+
+.list-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.list-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.filters {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.filter-btn {
+    background: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-btn:hover {
+    color: var(--text-main);
+    background-color: var(--bg-color);
+}
+
+.filter-btn.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.task-list {
+    list-style: none;
+}
+
+.task-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    background-color: white;
+    gap: 1rem;
+    animation: slideIn 0.3s ease forwards;
+}
+
+.task-item.completed {
+    opacity: 0.65;
+    background-color: #f1f5f9;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
     }
 
-    function cancelEdit() {
-        editingTaskId = null;
-        taskInput.value = '';
-        descriptionInput.value = '';
-        deadlineInput.value = '';
-
-        addBtn.innerHTML = '<i class="fas fa-plus"></i> Add';
-        cancelEditBtn.classList.add('hidden');
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
+}
 
-    function handleTaskAction(e) {
-        // Toggle completion
-        if (e.target.classList.contains('task-checkbox')) {
-            const taskId = e.target.closest('.task-item').dataset.id;
-            toggleTaskStatus(taskId);
-        }
+.task-item:last-child {
+    border-bottom: none;
+}
 
-        // Delete task
-        if (e.target.closest('.delete-btn')) {
-            const taskId = e.target.closest('.task-item').dataset.id;
-            deleteTask(taskId);
-        }
+.task-item:hover {
+    background-color: #f8fafc;
+}
 
-        // Edit task
-        if (e.target.closest('.edit-btn')) {
-            const taskId = e.target.closest('.task-item').dataset.id;
-            editTask(taskId);
-        }
+.task-checkbox {
+    appearance: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+}
+
+.task-checkbox:checked {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+}
+
+.task-checkbox:checked::after {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    color: white;
+    font-size: 0.8rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.task-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.task-text {
+    font-size: 1.05rem;
+    color: var(--text-main);
+    transition: all 0.2s ease;
+    word-break: break-word;
+}
+
+.task-item.completed .task-text {
+    color: var(--text-muted);
+    text-decoration: line-through;
+}
+
+.task-description {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-top: 0.35rem;
+    word-break: break-word;
+    line-height: 1.4;
+}
+
+.task-meta {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 0.6rem;
+}
+
+.deadline-badge {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.priority-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+    display: inline-block;
+    width: fit-content;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.priority-high {
+    background-color: var(--priority-high);
+    color: var(--priority-high-text);
+    border: 1px solid var(--priority-high-border);
+}
+
+.priority-medium {
+    background-color: var(--priority-medium);
+    color: var(--priority-medium-text);
+    border: 1px solid var(--priority-medium-border);
+}
+
+.priority-low {
+    background-color: var(--priority-low);
+    color: var(--priority-low-text);
+    border: 1px solid var(--priority-low-border);
+}
+
+.task-actions {
+    display: flex;
+    gap: 0.25rem;
+    opacity: 0;
+    transition: all 0.2s ease;
+}
+
+.task-item:hover .task-actions {
+    opacity: 1;
+}
+
+@media (max-width: 600px) {
+    .task-actions {
+        opacity: 1;
     }
+}
 
-    function editTask(id) {
-        const task = tasks.find(t => t.id === id);
-        if (!task) return;
+.edit-btn,
+.delete-btn {
+    background: none;
+    border: none;
+    color: #cbd5e1;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+}
 
-        // Populate form with task data
-        taskInput.value = task.text;
-        descriptionInput.value = task.description || '';
-        deadlineInput.value = task.deadline || '';
-        priorityInput.value = task.priority || 'medium';
+.edit-btn:hover {
+    color: var(--primary-color);
+    background-color: #eef2ff;
+}
 
-        // Set edit mode
-        editingTaskId = id;
-        addBtn.innerHTML = '<i class="fas fa-save"></i> Update';
-        cancelEditBtn.classList.remove('hidden');
+.delete-btn:hover {
+    color: var(--danger-color);
+    background-color: #fef2f2;
+}
 
-        // Scroll to form
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        taskInput.focus();
-    }
+.list-footer {
+    padding: 1rem 1.5rem;
+    background-color: #f8fafc;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
 
-    function toggleTaskStatus(id) {
-        const task = tasks.find(t => t.id === id);
-        if (task) {
-            db.collection('tasks').doc(id).update({
-                completed: !task.completed
-            }).catch(error => console.error("Error toggling task status:", error));
-        }
-    }
+.empty-state {
+    padding: 3rem 1.5rem;
+    text-align: center;
+    color: var(--text-muted);
+}
 
-    function deleteTask(id) {
-        // Add fade out animation class before removing
-        const taskElement = document.querySelector(`[data-id="${id}"]`);
-        if (taskElement) {
-            taskElement.style.animation = 'slideOut 0.3s ease forwards';
+.empty-img {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 1.5rem;
+    display: block;
+    opacity: 0.8;
+}
 
-            setTimeout(() => {
-                db.collection('tasks').doc(id).delete()
-                    .catch(error => console.error("Error deleting task:", error));
-            }, 300); // Wait for animation to finish
-        } else {
-            db.collection('tasks').doc(id).delete()
-                .catch(error => console.error("Error deleting task:", error));
-        }
-    }
-
-    function clearCompleted() {
-        const completedTasks = tasks.filter(task => task.completed);
-        
-        // Use a Firestore batch to delete multiple tasks efficiently
-        const batch = db.batch();
-        completedTasks.forEach(task => {
-            const taskRef = db.collection('tasks').doc(task.id);
-            batch.delete(taskRef);
-        });
-        
-        batch.commit().catch(error => console.error("Error clearing completed tasks:", error));
-    }
-
-    function renderTasks() {
-        // Filter tasks
-        let filteredTasks = tasks;
-        if (currentFilter === 'active') {
-            filteredTasks = tasks.filter(task => !task.completed);
-        } else if (currentFilter === 'completed') {
-            filteredTasks = tasks.filter(task => task.completed);
-        }
-
-        // Clear list
-        taskList.innerHTML = '';
-
-        // Handle empty state
-        if (tasks.length === 0) {
-            taskList.classList.add('hidden');
-            emptyState.classList.remove('hidden');
-            emptyState.querySelector('p').textContent = "You're all caught up! Add a task to get started.";
-        } else if (filteredTasks.length === 0) {
-            taskList.classList.add('hidden');
-            emptyState.classList.remove('hidden');
-            if (currentFilter === 'active') {
-                emptyState.querySelector('p').textContent = "No active tasks. Good job!";
-            } else if (currentFilter === 'completed') {
-                emptyState.querySelector('p').textContent = "No completed tasks yet. Get to work!";
-            }
-        } else {
-            taskList.classList.remove('hidden');
-            emptyState.classList.add('hidden');
-
-            // Render filtered tasks
-            filteredTasks.forEach(task => {
-                const li = document.createElement('li');
-                li.className = `task-item ${task.completed ? 'completed' : ''}`;
-                li.dataset.id = task.id;
-
-                li.innerHTML = `
-                    <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} aria-label="Mark task as completed">
-                    <div class="task-content">
-                        <span class="task-text">${escapeHTML(task.text)}</span>
-                        <!-- Show description if it exists -->
-                        ${task.description ? `<p class="task-description">${escapeHTML(task.description)}</p>` : ''}
-                        <div class="task-meta">
-                            <span class="priority-badge priority-${task.priority}">${task.priority} Priority</span>
-                            <!-- Show deadline if it exists -->
-                            ${task.deadline ? `<span class="deadline-badge" title="Deadline"><i class="far fa-calendar-alt"></i> ${new Date(task.deadline).toLocaleDateString()}</span>` : ''}
-                        </div>
-                    </div>
-                    <div class="task-actions">
-                        <!-- Edit button -->
-                        <button class="edit-btn" aria-label="Edit task">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="delete-btn" aria-label="Delete task">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </div>
-                `;
-
-                taskList.appendChild(li);
-            });
-        }
-
-        // Update counts
-        const activeTasks = tasks.filter(task => !task.completed).length;
-        taskCount.textContent = `${activeTasks} task${activeTasks !== 1 ? 's' : ''} left`;
-
-        // Manage clear completed button visibility
-        const completedTasks = tasks.filter(task => task.completed).length;
-        clearCompletedBtn.style.visibility = completedTasks > 0 ? 'visible' : 'hidden';
-    }
-
-    // Utility to prevent XSS
-    function escapeHTML(str) {
-        return str.replace(/[&<>'"]/g,
-            tag => ({
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                "'": '&#39;',
-                '"': '&quot;'
-            }[tag])
-        );
-    }
-});
-
-// Add this style dynamically for the delete animation
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideOut {
-        from {
-            opacity: 1;
-            transform: translateX(0);
-        }
-        to {
-            opacity: 0;
-            transform: translateX(20px);
-        }
-    }
-`;
-document.head.appendChild(style);
+.hidden {
+    display: none !important;
+}
