@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // DOM Elements
     const taskForm = document.getElementById('task-form');
     const taskInput = document.getElementById('task-input');
+    const deadlineInput = document.getElementById('deadline-input'); // New deadline input element
     const priorityInput = document.getElementById('priority-input');
     const taskList = document.getElementById('task-list');
     const taskCount = document.getElementById('task-count');
@@ -20,13 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
     taskForm.addEventListener('submit', addTask);
     taskList.addEventListener('click', handleTaskAction);
     clearCompletedBtn.addEventListener('click', clearCompleted);
-    
+
     filterBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
             // Update active class
             filterBtns.forEach(b => b.classList.remove('active'));
             e.target.classList.add('active');
-            
+
             // Update filter and render
             currentFilter = e.target.dataset.filter;
             renderTasks();
@@ -36,25 +37,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // Functions
     function addTask(e) {
         e.preventDefault();
-        
+
         const text = taskInput.value.trim();
+        const deadline = deadlineInput.value; // Get deadline value
         const priority = priorityInput.value;
-        
+
         if (text !== '') {
             const newTask = {
                 id: Date.now().toString(),
                 text,
+                deadline, // Save deadline with task
                 priority,
                 completed: false,
                 createdAt: new Date().toISOString()
             };
-            
+
             tasks.unshift(newTask); // Add to beginning
             saveTasks();
             renderTasks();
-            
+
             // Reset form
             taskInput.value = '';
+            deadlineInput.value = ''; // Reset deadline field
             taskInput.focus();
         }
     }
@@ -65,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const taskId = e.target.closest('.task-item').dataset.id;
             toggleTaskStatus(taskId);
         }
-        
+
         // Delete task
         if (e.target.closest('.delete-btn')) {
             const taskId = e.target.closest('.task-item').dataset.id;
@@ -80,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             return task;
         });
-        
+
         saveTasks();
         renderTasks();
     }
@@ -90,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const taskElement = document.querySelector(`[data-id="${id}"]`);
         if (taskElement) {
             taskElement.style.animation = 'slideOut 0.3s ease forwards';
-            
+
             setTimeout(() => {
                 tasks = tasks.filter(task => task.id !== id);
                 saveTasks();
@@ -141,24 +145,28 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             taskList.classList.remove('hidden');
             emptyState.classList.add('hidden');
-            
+
             // Render filtered tasks
             filteredTasks.forEach(task => {
                 const li = document.createElement('li');
                 li.className = `task-item ${task.completed ? 'completed' : ''}`;
                 li.dataset.id = task.id;
-                
+
                 li.innerHTML = `
                     <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} aria-label="Mark task as completed">
                     <div class="task-content">
                         <span class="task-text">${escapeHTML(task.text)}</span>
-                        <span class="priority-badge priority-${task.priority}">${task.priority} Priority</span>
+                        <div class="task-meta">
+                            <span class="priority-badge priority-${task.priority}">${task.priority} Priority</span>
+                            <!-- Show deadline if it exists -->
+                            ${task.deadline ? `<span class="deadline-badge" title="Deadline"><i class="far fa-calendar-alt"></i> ${new Date(task.deadline).toLocaleDateString()}</span>` : ''}
+                        </div>
                     </div>
                     <button class="delete-btn" aria-label="Delete task">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 `;
-                
+
                 taskList.appendChild(li);
             });
         }
@@ -166,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update counts
         const activeTasks = tasks.filter(task => !task.completed).length;
         taskCount.textContent = `${activeTasks} task${activeTasks !== 1 ? 's' : ''} left`;
-        
+
         // Manage clear completed button visibility
         const completedTasks = tasks.filter(task => task.completed).length;
         clearCompletedBtn.style.visibility = completedTasks > 0 ? 'visible' : 'hidden';
@@ -174,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Utility to prevent XSS
     function escapeHTML(str) {
-        return str.replace(/[&<>'"]/g, 
+        return str.replace(/[&<>'"]/g,
             tag => ({
                 '&': '&amp;',
                 '<': '&lt;',
