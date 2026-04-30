@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,18 +9,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
     <div class="container">
         <header>
             <h1>Student Task Manager</h1>
-            <p>organise your assignments and deadlines</p>
+            <p>Organise your assignments and deadlines</p>
         </header>
 
         <main>
             <section class="task-input-section">
                 <form id="task-form">
                     <div class="input-group">
-                        <input type="text" id="task-input" placeholder="What needs to be done?" required autocomplete="off">
+                        <input type="text" id="task-input" placeholder="What needs to be done?" required
+                            autocomplete="off">
+                        <!-- Date input for task deadline -->
+                        <input type="date" id="deadline-input" required aria-label="Task deadline">
                         <select id="priority-input">
                             <option value="low">Low Priority</option>
                             <option value="medium" selected>Medium Priority</option>
@@ -41,16 +46,16 @@
                         <button class="filter-btn" data-filter="completed">Completed</button>
                     </div>
                 </div>
-                
+
                 <ul id="task-list" class="task-list">
                     <!-- Tasks will be inserted here dynamically -->
                 </ul>
-                
+
                 <div id="empty-state" class="empty-state hidden">
                     <img src="https://illustrations.popsy.co/amber/freelancer.svg" alt="No tasks" class="empty-img">
                     <p>You're all caught up! Enjoy your free time.</p>
                 </div>
-                
+
                 <div class="list-footer">
                     <span id="task-count">0 tasks left</span>
                     <button id="clear-completed" class="btn secondary-btn">Clear completed</button>
@@ -61,4 +66,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>
