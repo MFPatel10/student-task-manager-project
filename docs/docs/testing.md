@@ -34,3 +34,13 @@ Actual Result: Passed
 Feature: Edit Task  
 Expected Result: Task details can be updated and saved  
 Actual Result: Passed
+
+## Test Case 8
+Feature: User Login  
+Expected Result: User can register, login, and logout  
+Actual Result: Passed
+
+## Test Case 9
+Feature: Firebase Task Storage  
+Expected Result: Task remains after logout and login  
+Actual Result: Passed
