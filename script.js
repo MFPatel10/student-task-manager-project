@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // DOM Elements
     const taskForm = document.getElementById('task-form');
     const taskInput = document.getElementById('task-input');
+    const addBtn = document.getElementById('add-btn'); // Add button
+    const cancelEditBtn = document.getElementById('cancel-edit-btn'); // Cancel edit button
     const descriptionInput = document.getElementById('description-input'); // Description input
     const deadlineInput = document.getElementById('deadline-input'); // New deadline input element
     const priorityInput = document.getElementById('priority-input');
@@ -14,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // State
     let tasks = JSON.parse(localStorage.getItem('studentTasks')) || [];
     let currentFilter = 'all';
+    let editingTaskId = null; // Track which task is being edited
 
     // Initialize
     renderTasks();
@@ -22,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     taskForm.addEventListener('submit', addTask);
     taskList.addEventListener('click', handleTaskAction);
     clearCompletedBtn.addEventListener('click', clearCompleted);
+    if(cancelEditBtn) cancelEditBtn.addEventListener('click', cancelEdit); // Cancel edit listener
 
     filterBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -45,17 +49,31 @@ document.addEventListener('DOMContentLoaded', () => {
         const priority = priorityInput.value;
 
         if (text !== '') {
-            const newTask = {
-                id: Date.now().toString(),
-                text,
-                description, // Save description with task
-                deadline, // Save deadline with task
-                priority,
-                completed: false,
-                createdAt: new Date().toISOString()
-            };
+            if (editingTaskId) {
+                // Update existing task
+                tasks = tasks.map(task => {
+                    if (task.id === editingTaskId) {
+                        return { ...task, text, description, deadline, priority };
+                    }
+                    return task;
+                });
+                editingTaskId = null;
+                addBtn.innerHTML = '<i class="fas fa-plus"></i> Add';
+                cancelEditBtn.classList.add('hidden');
+            } else {
+                // Add new task
+                const newTask = {
+                    id: Date.now().toString(),
+                    text,
+                    description,
+                    deadline,
+                    priority,
+                    completed: false,
+                    createdAt: new Date().toISOString()
+                };
+                tasks.unshift(newTask);
+            }
 
-            tasks.unshift(newTask); // Add to beginning
             saveTasks();
             renderTasks();
 
@@ -65,6 +83,16 @@ document.addEventListener('DOMContentLoaded', () => {
             deadlineInput.value = ''; // Reset deadline field
             taskInput.focus();
         }
+    }
+
+    function cancelEdit() {
+        editingTaskId = null;
+        taskInput.value = '';
+        descriptionInput.value = '';
+        deadlineInput.value = '';
+        
+        addBtn.innerHTML = '<i class="fas fa-plus"></i> Add';
+        cancelEditBtn.classList.add('hidden');
     }
 
     function handleTaskAction(e) {
@@ -79,6 +107,32 @@ document.addEventListener('DOMContentLoaded', () => {
             const taskId = e.target.closest('.task-item').dataset.id;
             deleteTask(taskId);
         }
+
+        // Edit task
+        if (e.target.closest('.edit-btn')) {
+            const taskId = e.target.closest('.task-item').dataset.id;
+            editTask(taskId);
+        }
+    }
+
+    function editTask(id) {
+        const task = tasks.find(t => t.id === id);
+        if (!task) return;
+
+        // Populate form with task data
+        taskInput.value = task.text;
+        descriptionInput.value = task.description || '';
+        deadlineInput.value = task.deadline || '';
+        priorityInput.value = task.priority || 'medium';
+
+        // Set edit mode
+        editingTaskId = id;
+        addBtn.innerHTML = '<i class="fas fa-save"></i> Update';
+        cancelEditBtn.classList.remove('hidden');
+        
+        // Scroll to form
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        taskInput.focus();
     }
 
     function toggleTaskStatus(id) {
@@ -168,9 +222,15 @@ document.addEventListener('DOMContentLoaded', () => {
                             ${task.deadline ? `<span class="deadline-badge" title="Deadline"><i class="far fa-calendar-alt"></i> ${new Date(task.deadline).toLocaleDateString()}</span>` : ''}
                         </div>
                     </div>
-                    <button class="delete-btn" aria-label="Delete task">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
+                    <div class="task-actions">
+                        <!-- Edit button -->
+                        <button class="edit-btn" aria-label="Edit task">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="delete-btn" aria-label="Delete task">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
                 `;
 
                 taskList.appendChild(li);
@@ -215,3 +275,4 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
