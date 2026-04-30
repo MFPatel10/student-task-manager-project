@@ -12,17 +12,52 @@
 
 <body>
     <div class="container">
-        <header>
-            <h1>Student Task Manager</h1>
-            <p>Organise your assignments and deadlines</p>
-        </header>
+        <!-- Auth Section -->
+        <div id="auth-section" class="auth-container">
+            <header>
+                <h1>Student Task Manager</h1>
+                <p>Please login or register to continue</p>
+            </header>
+            <div class="auth-form-card">
+                <form id="auth-form">
+                    <div class="form-control">
+                        <input type="email" id="email-input" placeholder="Email Address" required>
+                    </div>
+                    <div class="form-control" style="margin-top: 1rem;">
+                        <input type="password" id="password-input" placeholder="Password" required>
+                    </div>
+                    <div class="auth-buttons" style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+                        <button type="button" id="login-btn" class="btn primary-btn" style="flex: 1;">Login</button>
+                        <button type="button" id="register-btn" class="btn secondary-btn" style="flex: 1; text-align: center;">Register</button>
+                    </div>
+                    <p id="auth-error" class="hidden" style="color: var(--danger-color); margin-top: 1rem; text-align: center; font-size: 0.9rem;"></p>
+                </form>
+            </div>
+        </div>
 
-        <main>
+        <!-- Main App Section -->
+        <div id="app-section" class="hidden">
+            <header style="display: flex; justify-content: space-between; align-items: center; text-align: left; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <h1 style="margin-bottom: 0;">Student Task Manager</h1>
+                    <p>Organise your assignments and deadlines</p>
+                </div>
+                <div class="user-info" style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
+                    <p id="user-email" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 500;"></p>
+                    <button id="logout-btn" class="btn secondary-btn" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </header>
+
+            <main>
             <section class="task-input-section">
                 <form id="task-form">
                     <div class="form-grid">
-                        <input type="text" id="task-input" placeholder="What needs to be done?" required autocomplete="off">
-                        <input type="text" id="description-input" placeholder="Add a description (optional)" autocomplete="off">
+                        <input type="text" id="task-input" placeholder="What needs to be done?" required
+                            autocomplete="off">
+                        <input type="text" id="description-input" placeholder="Add a description (optional)"
+                            autocomplete="off">
                         <div class="controls-row">
                             <input type="date" id="deadline-input" required aria-label="Task deadline">
                             <select id="priority-input">
@@ -31,7 +66,8 @@
                                 <option value="high">High Priority</option>
                             </select>
                             <div class="button-group">
-                                <button type="button" id="cancel-edit-btn" class="btn secondary-btn hidden">Cancel</button>
+                                <button type="button" id="cancel-edit-btn"
+                                    class="btn secondary-btn hidden">Cancel</button>
                                 <button type="submit" id="add-btn" class="btn primary-btn">
                                     <i class="fas fa-plus"></i> Add
                                 </button>
@@ -66,8 +102,12 @@
                 </div>
             </section>
         </main>
+        </div> <!-- End of app-section -->
     </div>
-
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="firebase.js"></script>
     <script src="script.js"></script>
 </body>
 
