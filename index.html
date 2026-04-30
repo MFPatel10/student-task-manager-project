@@ -20,27 +20,23 @@
         <main>
             <section class="task-input-section">
                 <form id="task-form">
-                    <div class="input-group">
-                        <input type="text" id="task-input" placeholder="What needs to be done?" required
-                            autocomplete="off">
-                        <!-- Date input for task deadline -->
-                        <input type="date" id="deadline-input" required aria-label="Task deadline">
-                        <select id="priority-input">
-                            <option value="low">Low Priority</option>
-                            <option value="medium" selected>Medium Priority</option>
-                            <option value="high">High Priority</option>
-                        </select>
-                        <button type="submit" id="add-btn" class="btn primary-btn">
-                            <i class="fas fa-plus"></i> Add
-                        </button>
-                        <!-- Cancel button for edit mode -->
-                        <button type="button" id="cancel-edit-btn" class="btn secondary-btn hidden">
-                            Cancel
-                        </button>
-                    </div>
-                    <!-- Task description input -->
-                    <div class="input-group" style="margin-top: 1rem;">
+                    <div class="form-grid">
+                        <input type="text" id="task-input" placeholder="What needs to be done?" required autocomplete="off">
                         <input type="text" id="description-input" placeholder="Add a description (optional)" autocomplete="off">
+                        <div class="controls-row">
+                            <input type="date" id="deadline-input" required aria-label="Task deadline">
+                            <select id="priority-input">
+                                <option value="low">Low Priority</option>
+                                <option value="medium" selected>Medium Priority</option>
+                                <option value="high">High Priority</option>
+                            </select>
+                            <div class="button-group">
+                                <button type="button" id="cancel-edit-btn" class="btn secondary-btn hidden">Cancel</button>
+                                <button type="submit" id="add-btn" class="btn primary-btn">
+                                    <i class="fas fa-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </section>
