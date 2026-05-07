@@ -8,7 +8,16 @@ const firebaseConfig = {
     appId: "1:1011769467568:web:b242c76b652223fd141175"
 };
 
+window.firebaseConfig = firebaseConfig;
+
 // Connect the website to Firebase
 const app = firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
+
+// Long polling is more reliable on localhost and restricted networks.
+// It helps Firestore writes finish instead of staying stuck as local pending changes.
+db.settings({
+    experimentalForceLongPolling: true,
+    useFetchStreams: false
+});
