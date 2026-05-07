@@ -476,3 +476,125 @@ select:focus {
 .hidden {
     display: none !important;
 }
+
+.dashboard-summary {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(110px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.summary-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0.9rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.summary-card p {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.summary-card strong {
+    font-size: 1.4rem;
+}
+
+.progress-card {
+    min-width: 0;
+}
+
+.progress-track {
+    height: 0.45rem;
+    background: #e2e8f0;
+    border-radius: 9999px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+}
+
+.progress-track span {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: var(--success-color);
+    transition: width 0.2s ease;
+}
+
+.search-section {
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.search-section input {
+    flex: 1 1 260px;
+}
+
+.search-section select {
+    flex: 1 1 160px;
+}
+
+.category-badge {
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    border-radius: 9999px;
+    color: #3730a3;
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+}
+
+.due-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+}
+
+.due-overdue {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.due-urgent {
+    background: #ffedd5;
+    color: #c2410c;
+}
+
+.due-soon {
+    background: #fef9c3;
+    color: #a16207;
+}
+
+.due-normal {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+.task-overdue {
+    border-left: 4px solid var(--danger-color);
+}
+
+.toast {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    max-width: min(320px, calc(100vw - 2rem));
+    background: var(--text-main);
+    color: white;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    font-size: 0.9rem;
+    padding: 0.85rem 1rem;
+    z-index: 20;
+}
+
+@media (max-width: 700px) {
+    .dashboard-summary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
