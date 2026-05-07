@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (unsubscribeTasksListener) unsubscribeTasksListener();
         if (unsubscribeLegacyListener) unsubscribeLegacyListener();
 
-        // Read all task once and filter on the client for compatibility with older schemas.
+        // Read all tasks once and filter on the client for compatibility with older schemas.
         // This avoids missing tasks that were saved with different owner keys.
         unsubscribeTasksListener = db.collection('tasks').onSnapshot(snapshot => {
             const allTasks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
