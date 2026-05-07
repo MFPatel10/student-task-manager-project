@@ -74,6 +74,8 @@
                                     <option value="medium" selected>Medium Priority</option>
                                     <option value="high">High Priority</option>
                                 </select>
+                                <input type="number" id="estimate-input" min="0" step="15"
+                                    placeholder="Study minutes" aria-label="Estimated study minutes">
                                 <div class="button-group">
                                     <button type="button" id="cancel-edit-btn"
                                         class="btn secondary-btn hidden">Cancel</button>
@@ -111,6 +113,17 @@
                     </div>
                 </section>
 
+                <section class="insights-section">
+                    <div class="insight-panel">
+                        <h2>Upcoming Deadlines</h2>
+                        <ul id="upcoming-list" class="insight-list"></ul>
+                    </div>
+                    <div class="insight-panel">
+                        <h2>Priority Breakdown</h2>
+                        <div id="priority-breakdown" class="priority-breakdown"></div>
+                    </div>
+                </section>
+
                 <section class="search-section controls-row">
                     <input type="text" id="search-input" placeholder="Search tasks by title or description">
                     <select id="sort-input" aria-label="Sort tasks">
@@ -132,6 +145,7 @@
                             <button class="filter-btn" data-filter="active">Active</button>
                             <button class="filter-btn" data-filter="completed">Completed</button>
                             <button class="filter-btn" data-filter="overdue">Overdue</button>
+                            <button class="filter-btn" data-filter="due-soon">Due Soon</button>
                             <button class="filter-btn" data-filter="high-priority">High Priority</button>
                         </div>
                     </div>
@@ -147,7 +161,10 @@
 
                     <div class="list-footer">
                         <span id="task-count">0 tasks left</span>
-                        <button id="clear-completed" class="btn secondary-btn">Clear completed</button>
+                        <div class="footer-actions">
+                            <button id="export-tasks" class="btn secondary-btn">Export CSV</button>
+                            <button id="clear-completed" class="btn secondary-btn">Clear completed</button>
+                        </div>
                     </div>
                 </section>
             </main>
@@ -158,7 +175,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="firebase.js?v=3"></script>
-    <script src="script.js?v=12"></script>
+    <script src="script.js?v=14"></script>
 </body>
 
 </html>
