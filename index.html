@@ -28,22 +28,29 @@
                     </div>
                     <div class="auth-buttons" style="margin-top: 1.5rem; display: flex; gap: 1rem;">
                         <button type="button" id="login-btn" class="btn primary-btn" style="flex: 1;">Login</button>
-                        <button type="button" id="register-btn" class="btn secondary-btn" style="flex: 1; text-align: center;">Register</button>
+                        <button type="button" id="register-btn" class="btn secondary-btn"
+                            style="flex: 1; text-align: center;">Register</button>
                     </div>
-                    <p id="auth-error" class="hidden" style="color: var(--danger-color); margin-top: 1rem; text-align: center; font-size: 0.9rem;"></p>
+                    <p id="auth-error" class="hidden"
+                        style="color: var(--danger-color); margin-top: 1rem; text-align: center; font-size: 0.9rem;">
+                    </p>
                 </form>
             </div>
         </div>
 
         <!-- Main App Section -->
         <div id="app-section" class="hidden">
-            <header style="display: flex; justify-content: space-between; align-items: center; text-align: left; flex-wrap: wrap; gap: 1rem;">
+            <header
+                style="display: flex; justify-content: space-between; align-items: center; text-align: left; flex-wrap: wrap; gap: 1rem;">
                 <div>
                     <h1 style="margin-bottom: 0;">Student Task Manager</h1>
                     <p>Organise your assignments and deadlines</p>
                 </div>
-                <div class="user-info" style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
-                    <p id="user-email" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 500;"></p>
+                <div class="user-info"
+                    style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
+                    <p id="user-email"
+                        style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 500;">
+                    </p>
                     <button id="logout-btn" class="btn secondary-btn" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
@@ -51,64 +58,107 @@
             </header>
 
             <main>
-            <section class="task-input-section">
-                <form id="task-form">
-                    <div class="form-grid">
-                        <input type="text" id="task-input" placeholder="What needs to be done?" required
-                            autocomplete="off">
-                        <input type="text" id="description-input" placeholder="Add a description (optional)"
-                            autocomplete="off">
-                        <div class="controls-row">
-                            <input type="date" id="deadline-input" required aria-label="Task deadline">
-                            <select id="priority-input">
-                                <option value="low">Low Priority</option>
-                                <option value="medium" selected>Medium Priority</option>
-                                <option value="high">High Priority</option>
-                            </select>
-                            <div class="button-group">
-                                <button type="button" id="cancel-edit-btn"
-                                    class="btn secondary-btn hidden">Cancel</button>
-                                <button type="submit" id="add-btn" class="btn primary-btn">
-                                    <i class="fas fa-plus"></i> Add
-                                </button>
+                <section class="task-input-section">
+                    <form id="task-form">
+                        <div class="form-grid">
+                            <input type="text" id="task-input" placeholder="What needs to be done?" required
+                                autocomplete="off">
+                            <input type="text" id="description-input" placeholder="Add a description (optional)"
+                                autocomplete="off">
+                            <input type="text" id="category-input" placeholder="Category (optional)"
+                                autocomplete="off">
+                            <div class="controls-row">
+                                <input type="date" id="deadline-input" aria-label="Task deadline">
+                                <select id="priority-input">
+                                    <option value="low">Low Priority</option>
+                                    <option value="medium" selected>Medium Priority</option>
+                                    <option value="high">High Priority</option>
+                                </select>
+                                <div class="button-group">
+                                    <button type="button" id="cancel-edit-btn"
+                                        class="btn secondary-btn hidden">Cancel</button>
+                                    <button type="submit" id="add-btn" class="btn primary-btn">
+                                        <i class="fas fa-plus"></i> Add
+                                    </button>
+                                </div>
                             </div>
                         </div>
+                    </form>
+                </section>
+
+
+                <section class="dashboard-summary">
+                    <div class="summary-card">
+                        <p>Total Tasks</p><strong id="summary-total">0</strong>
                     </div>
-                </form>
-            </section>
-
-            <section class="task-list-section">
-                <div class="list-header">
-                    <h2>Your Tasks</h2>
-                    <div class="filters">
-                        <button class="filter-btn active" data-filter="all">All</button>
-                        <button class="filter-btn" data-filter="active">Active</button>
-                        <button class="filter-btn" data-filter="completed">Completed</button>
+                    <div class="summary-card">
+                        <p>Completed</p><strong id="summary-completed">0</strong>
                     </div>
-                </div>
+                    <div class="summary-card">
+                        <p>Pending</p><strong id="summary-pending">0</strong>
+                    </div>
+                    <div class="summary-card">
+                        <p>Overdue</p><strong id="summary-overdue">0</strong>
+                    </div>
+                    <div class="summary-card">
+                        <p>High Priority</p><strong id="summary-high-priority">0</strong>
+                    </div>
+                    <div class="summary-card progress-card">
+                        <p>Completion</p><strong id="completion-percent">0%</strong>
+                        <div class="progress-track">
+                            <span id="completion-bar"></span>
+                        </div>
+                    </div>
+                </section>
 
-                <ul id="task-list" class="task-list">
-                    <!-- Tasks will be inserted here dynamically -->
-                </ul>
+                <section class="search-section controls-row">
+                    <input type="text" id="search-input" placeholder="Search tasks by title or description">
+                    <select id="sort-input" aria-label="Sort tasks">
+                        <option value="newest">Newest first</option>
+                        <option value="oldest">Oldest first</option>
+                        <option value="deadline">Deadline</option>
+                        <option value="priority">Priority</option>
+                    </select>
+                    <select id="category-filter" aria-label="Filter by category">
+                        <option value="all">All Categories</option>
+                    </select>
+                </section>
 
-                <div id="empty-state" class="empty-state hidden">
-                    <img src="https://illustrations.popsy.co/amber/freelancer.svg" alt="No tasks" class="empty-img">
-                    <p>You're all caught up! Enjoy your free time.</p>
-                </div>
+                <section class="task-list-section">
+                    <div class="list-header">
+                        <h2>Your Tasks</h2>
+                        <div class="filters">
+                            <button class="filter-btn active" data-filter="all">All</button>
+                            <button class="filter-btn" data-filter="active">Active</button>
+                            <button class="filter-btn" data-filter="completed">Completed</button>
+                            <button class="filter-btn" data-filter="overdue">Overdue</button>
+                            <button class="filter-btn" data-filter="high-priority">High Priority</button>
+                        </div>
+                    </div>
 
-                <div class="list-footer">
-                    <span id="task-count">0 tasks left</span>
-                    <button id="clear-completed" class="btn secondary-btn">Clear completed</button>
-                </div>
-            </section>
-        </main>
+                    <ul id="task-list" class="task-list">
+                        <!-- Tasks will be inserted here dynamically -->
+                    </ul>
+
+                    <div id="empty-state" class="empty-state hidden">
+                        <img src="https://illustrations.popsy.co/amber/freelancer.svg" alt="No tasks" class="empty-img">
+                        <p>You're all caught up! Enjoy your free time.</p>
+                    </div>
+
+                    <div class="list-footer">
+                        <span id="task-count">0 tasks left</span>
+                        <button id="clear-completed" class="btn secondary-btn">Clear completed</button>
+                    </div>
+                </section>
+            </main>
         </div> <!-- End of app-section -->
     </div>
+    <div id="toast" class="toast hidden"></div>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-    <script src="firebase.js"></script>
-    <script src="script.js"></script>
+    <script src="firebase.js?v=3"></script>
+    <script src="script.js?v=12"></script>
 </body>
 
 </html>
