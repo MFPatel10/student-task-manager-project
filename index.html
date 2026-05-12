@@ -51,13 +51,26 @@
                     <p id="user-email"
                         style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 500;">
                     </p>
-                    <button id="logout-btn" class="btn secondary-btn" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
+                    <span id="sync-status" class="sync-status">Not synced yet</span>
+                    <div class="header-actions">
+                        <button id="refresh-tasks" class="btn secondary-btn" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                        <button id="logout-btn" class="btn secondary-btn" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
                 </div>
             </header>
 
             <main>
+                <nav class="section-nav" aria-label="Dashboard sections">
+                    <a href="#planner-section">Planner</a>
+                    <a href="#workload-section">Workload</a>
+                    <a href="#analytics-section">Analytics</a>
+                    <a href="#tasks-section">Tasks</a>
+                </nav>
+
                 <section class="task-input-section">
                     <form id="task-form">
                         <div class="form-grid">
@@ -124,7 +137,7 @@
                     </div>
                 </section>
 
-                <section class="planner-section">
+                <section id="planner-section" class="planner-section">
                     <div class="planner-header">
                         <div>
                             <h2>Smart Study Planner</h2>
@@ -135,7 +148,7 @@
                     <ol id="planner-list" class="planner-list"></ol>
                 </section>
 
-                <section class="workload-section">
+                <section id="workload-section" class="workload-section">
                     <div class="planner-header">
                         <div>
                             <h2>Weekly Workload</h2>
@@ -146,7 +159,7 @@
                     <div id="workload-grid" class="workload-grid"></div>
                 </section>
 
-                <section class="analytics-section">
+                <section id="analytics-section" class="analytics-section">
                     <div class="planner-header">
                         <div>
                             <h2>Analytics</h2>
@@ -193,7 +206,7 @@
                     </select>
                 </section>
 
-                <section class="task-list-section">
+                <section id="tasks-section" class="task-list-section">
                     <div class="list-header">
                         <h2>Your Tasks</h2>
                         <div class="filters">
@@ -231,7 +244,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="firebase.js?v=3"></script>
-    <script src="script.js?v=17"></script>
+    <script src="script.js?v=18"></script>
 </body>
 
 </html>
+
