@@ -81,6 +81,43 @@ header p {
     font-size: 1.1rem;
 }
 
+.header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+.sync-status {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    margin-bottom: 0.5rem;
+}
+
+.section-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.section-nav a {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 0.55rem 0.8rem;
+    text-decoration: none;
+}
+
+.section-nav a:hover {
+    background: #eef2ff;
+    border-color: #c7d2fe;
+    color: var(--primary-color);
+}
+
 .task-input-section {
     background: var(--card-bg);
     padding: 1.5rem;
@@ -193,6 +230,12 @@ select:focus {
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
+}
+
+.btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none;
 }
 
 .primary-btn {
