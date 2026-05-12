@@ -44,3 +44,13 @@ Actual Result: Passed
 Feature: Firebase Task Storage  
 Expected Result: Task remains after logout and login  
 Actual Result: Passed
+
+Test Case 10
+Add Firebase security testing evidence
+Testing
+Security Testing
+Firebase Authentication and Access Control
+The application was tested with two different Firebase accounts. Tasks created by one user were not visible to another user, confirming that task data is linked to the authenticated user ID and separated between accounts.
+
+
+
