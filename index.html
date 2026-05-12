@@ -124,6 +124,62 @@
                     </div>
                 </section>
 
+                <section class="planner-section">
+                    <div class="planner-header">
+                        <div>
+                            <h2>Smart Study Planner</h2>
+                            <p>Recommended next tasks based on urgency, priority, deadline risk, and estimated study time.</p>
+                        </div>
+                        <span id="planner-count" class="planner-count">0 recommendations</span>
+                    </div>
+                    <ol id="planner-list" class="planner-list"></ol>
+                </section>
+
+                <section class="workload-section">
+                    <div class="planner-header">
+                        <div>
+                            <h2>Weekly Workload</h2>
+                            <p>Tasks and estimated study time grouped by upcoming deadline date.</p>
+                        </div>
+                        <span id="workload-total" class="planner-count">0m planned</span>
+                    </div>
+                    <div id="workload-grid" class="workload-grid"></div>
+                </section>
+
+                <section class="analytics-section">
+                    <div class="planner-header">
+                        <div>
+                            <h2>Analytics</h2>
+                            <p>Performance and workload indicators based on your current task data.</p>
+                        </div>
+                        <span id="risk-level" class="planner-count">Low risk</span>
+                    </div>
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <p>Average Study Time</p>
+                            <strong id="average-study-time">0m</strong>
+                        </div>
+                        <div class="analytics-card">
+                            <p>Most Common Category</p>
+                            <strong id="top-category">None</strong>
+                        </div>
+                        <div class="analytics-card">
+                            <p>On-Time Tasks</p>
+                            <strong id="on-time-count">0</strong>
+                        </div>
+                    </div>
+                    <div class="chart-grid">
+                        <div class="chart-panel">
+                            <h3>Priority Distribution</h3>
+                            <div id="priority-chart" class="bar-chart"></div>
+                        </div>
+                        <div class="chart-panel">
+                            <h3>Category Distribution</h3>
+                            <div id="category-chart" class="bar-chart"></div>
+                        </div>
+                    </div>
+                </section>
+
                 <section class="search-section controls-row">
                     <input type="text" id="search-input" placeholder="Search tasks by title or description">
                     <select id="sort-input" aria-label="Sort tasks">
@@ -175,7 +231,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="firebase.js?v=3"></script>
-    <script src="script.js?v=14"></script>
+    <script src="script.js?v=17"></script>
 </body>
 
 </html>
