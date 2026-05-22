@@ -1029,4 +1029,5 @@ select:focus {
     .workload-grid {
         grid-template-columns: repeat(7, minmax(130px, 1fr));
     }
+
 }
